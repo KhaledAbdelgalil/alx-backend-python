@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Test for access_nested_map function
+Test for functions in utils
 """
 import unittest
 import requests
 from unittest.mock import patch
-from utils import access_nested_map
+from utils import access_nested_map, get_json, memoize
 from typing import Mapping, Sequence, Any
 from parameterized import parameterized
 
@@ -46,3 +46,25 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         with self.assertRaises(Exception):
             access_nested_map(nested_map, path)
+
+
+class TestGetJson(unittest.TestCase):
+    """
+    Test the get_json function
+    """
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False})
+    ])
+    @patch("requests.get")
+    def test_get_json(self, test_url, test_payload, mock_requests_get):
+        """
+        Test the get_json method to ensure it returns the expected output.
+        Args:
+            url: url to send http request to
+            payload: expected json response
+        """
+        mock_requests_get.return_value.json.return_value = test_payload
+        result = get_json(test_url)
+        self.assertEqual(result, test_payload)
+        mock_requests_get.assert_called_once_with(test_url)

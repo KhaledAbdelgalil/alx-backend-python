@@ -1,5 +1,5 @@
-from typing import Mapping, Sequence, Any
-
+from typing import Mapping, Sequence, Any, Dict
+import requests
 def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
     """Access nested map with key path.
     Parameters
@@ -21,6 +21,13 @@ def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
 
     return nested_map
 
+def get_json(url: str) -> Dict:
+    """Get JSON from remote URL.
+    """
+    response = requests.get(url)
+    return response
 # Example usage
 a = access_nested_map(nested_map={"a": {"b": 2}}, path=("a", "b"))
 print(a)
+print(get_json("http://example.com"))
+print(get_json("http://holberton.io"))
